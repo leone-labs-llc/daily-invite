@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You're invited to DaiLY</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #7C3AED;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      background: #7C3AED;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      margin-bottom: 12px;
+      transition: opacity 0.15s;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn:last-child { margin-bottom: 0; }
+
+    .btn-primary {
+      background: #7C3AED;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #F3F0FF;
+      color: #7C3AED;
+    }
+
+    .divider {
+      font-size: 13px;
+      color: #aaa;
+      margin: 4px 0 16px;
+    }
+
+    /* Show/hide per platform */
+    .ios-only, .android-only, .all-platforms { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">✓</div>
+    <h1>You're invited to DaiLY</h1>
+    <p>Accept your invite and start collaborating on tasks together.</p>
+
+    <!-- Open app (shown after redirect attempt) -->
+    <a id="open-btn" class="btn btn-primary" href="#" style="display:none">Open DaiLY</a>
+
+    <div id="download-section" style="display:none">
+      <p class="divider">Don't have DaiLY yet?</p>
+      <a id="ios-btn"     class="btn btn-secondary ios-only"      href="YOUR_TESTFLIGHT_LINK">Download on TestFlight</a>
+      <a id="android-btn" class="btn btn-secondary android-only"  href="YOUR_GOOGLE_DRIVE_APK_LINK">Download APK</a>
+      <div class="all-platforms">
+        <a class="btn btn-secondary" href="YOUR_TESTFLIGHT_LINK">iOS — TestFlight</a>
+        <a class="btn btn-secondary" href="YOUR_GOOGLE_DRIVE_APK_LINK">Android — Download APK</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Extract token from path: /abc123
+      var token = window.location.pathname.replace(/^\//, "").split("/")[0];
+      if (!token) return;
+
+      var isIOS     = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      var isAndroid = /Android/.test(navigator.userAgent);
+
+      // Show the correct download section
+      if (isIOS)          document.querySelectorAll(".ios-only").forEach(function(el){ el.style.display="block"; });
+      else if (isAndroid) document.querySelectorAll(".android-only").forEach(function(el){ el.style.display="block"; });
+      else                document.querySelectorAll(".all-platforms").forEach(function(el){ el.style.display="block"; });
+
+      // Wire the "Open DaiLY" button
+      var openBtn = document.getElementById("open-btn");
+      openBtn.href = "daily://invite/" + token;
+      openBtn.style.display = "block";
+
+      // Attempt to open the app immediately; reveal download section after delay
+      window.location.href = "daily://invite/" + token;
+      setTimeout(function () {
+        document.getElementById("download-section").style.display = "block";
+      }, 1500);
+    })();
+  </script>
+</body>
+</html>
